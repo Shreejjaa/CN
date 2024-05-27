@@ -1,0 +1,37 @@
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class SelectiveRepeatServer {
+    public static void main(String[] args) throws Exception {
+        DatagramSocket serverSocket = new DatagramSocket(12345);
+        byte[] receiveBuffer = new byte[1024];
+        int expectedSeqNum = 0;
+
+        while (true) {
+            DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+            serverSocket.receive(receivePacket);
+            String message = new String(receivePacket.getData(), 0, receivePacket.getLength());
+            int seqNum = Integer.parseInt(message.substring(0, 1));
+            String data = message.substring(1);
+
+            if (seqNum == expectedSeqNum) {
+                System.out.println("Received expected packet: " + data);
+                byte[] ackData = ("ACK" + seqNum).getBytes();
+                DatagramPacket ackPacket = new DatagramPacket(ackData, ackData.length, receivePacket.getAddress(), receivePacket.getPort());
+                serverSocket.send(ackPacket);
+                expectedSeqNum = (expectedSeqNum + 1) % 2;
+            } else {
+                System.out.println("Received out of order packet: " + data);
+                byte[] ackData = ("ACK" + (expectedSeqNum - 1) % 2).getBytes();
+                DatagramPacket ackPacket = new DatagramPacket(ackData, ackData.length, receivePacket.getAddress(), receivePacket.getPort());
+                serverSocket.send(ackPacket);
+            }
+        }
+    }
+}
+
+
+Received expected packet: Hello
+Received out of order packet: World
+Received expected packet: World

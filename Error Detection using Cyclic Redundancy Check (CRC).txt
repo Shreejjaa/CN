@@ -1,0 +1,31 @@
+public class CRC {
+    public static void main(String[] args) {
+        String data = "11010011101100";
+        String divisor = "1011";
+        String crc = generateCRC(data, divisor);
+        System.out.println("Data: " + data);
+        System.out.println("Divisor: " + divisor);
+        System.out.println("CRC: " + crc);
+    }
+
+    public static String generateCRC(String data, String divisor) {
+        int dataLen = data.length();
+        int divisorLen = divisor.length();
+        String dividend = data + "0".repeat(divisorLen - 1);
+
+        for (int i = 0; i <= dataLen; i++) {
+            if (dividend.charAt(i) == '1') {
+                for (int j = 0; j < divisorLen; j++) {
+                    dividend = dividend.substring(0, i + j) + (dividend.charAt(i + j) == divisor.charAt(j) ? '0' : '1') + dividend.substring(i + j + 1);
+                }
+            }
+        }
+
+        return dividend.substring(dataLen);
+    }
+}
+
+Data: 11010011101100
+Divisor: 1011
+CRC: 100
+

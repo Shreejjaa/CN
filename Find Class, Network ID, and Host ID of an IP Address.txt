@@ -1,0 +1,37 @@
+public class IPAddressInfo {
+    public static void main(String[] args) {
+        String ip = "192.168.1.1";
+        String[] parts = ip.split("\\.");
+        int firstOctet = Integer.parseInt(parts[0]);
+        String ipClass = "";
+        String netID = "";
+        String hostID = "";
+
+        if (firstOctet >= 1 && firstOctet <= 126) {
+            ipClass = "A";
+            netID = parts[0];
+            hostID = parts[1] + "." + parts[2] + "." + parts[3];
+        } else if (firstOctet >= 128 && firstOctet <= 191) {
+            ipClass = "B";
+            netID = parts[0] + "." + parts[1];
+            hostID = parts[2] + "." + parts[3];
+        } else if (firstOctet >= 192 && firstOctet <= 223) {
+            ipClass = "C";
+            netID = parts[0] + "." + parts[1] + "." + parts[2];
+            hostID = parts[3];
+        } else if (firstOctet >= 224 && firstOctet <= 239) {
+            ipClass = "D";
+        } else {
+            ipClass = "E";
+        }
+
+        System.out.println("IP Class: " + ipClass);
+        System.out.println("Network ID: " + netID);
+        System.out.println("Host ID: " + hostID);
+    }
+}
+
+IP Class: C
+Network ID: 192.168.1
+Host ID: 1
+

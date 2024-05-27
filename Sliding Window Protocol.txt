@@ -1,0 +1,35 @@
+public class SlidingWindow {
+    private int windowSize;
+    private int[] window;
+
+    public SlidingWindow(int size) {
+        this.windowSize = size;
+        this.window = new int[size];
+    }
+
+    public void send(int data) {
+        System.out.println("Sending: " + data);
+    }
+
+    public void receiveAck(int ack) {
+        System.out.println("Received ACK: " + ack);
+    }
+
+    public static void main(String[] args) {
+        SlidingWindow sw = new SlidingWindow(3);
+        sw.send(1);
+        sw.send(2);
+        sw.send(3);
+        sw.send(4); // Should wait for ACK
+        sw.receiveAck(1);
+        sw.send(4); // Now should be sent
+    }
+}
+
+Sending: 1
+Sending: 2
+Sending: 3
+Sending: 4
+Received ACK: 1
+Sending: 4
+

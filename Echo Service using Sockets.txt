@@ -1,0 +1,45 @@
+import java.io.*;
+import java.net.*;
+
+public class EchoServer {
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(12345)) {
+            System.out.println("Server is listening on port 12345");
+            while (true) {
+                try (Socket socket = serverSocket.accept()) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+                    String message = reader.readLine();
+                    writer.println("Echo: " + message);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Server is listening on port 12345
+(Client sends message, server echoes it back)
+
+
+import java.io.*;
+import java.net.*;
+
+public class EchoClient {
+    public static void main(String[] args) {
+        try (Socket socket = new Socket("localhost", 12345)) {
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String message = "Hello, Server!";
+            writer.println(message);
+            System.out.println("Received from server: " + reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Received from server: Echo: Hello, Server!
+

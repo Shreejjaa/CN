@@ -1,0 +1,41 @@
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+
+public class MulticastServer {
+    public static void main(String[] args) throws Exception {
+        MulticastSocket socket = new MulticastSocket(10000);
+        InetAddress group = InetAddress.getByName("224.1.1.1");
+        socket.joinGroup(group);
+
+        byte[] buffer = new byte[256];
+        while (true) {
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            socket.receive(packet);
+            String received = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Received: " + received);
+        }
+    }
+}
+
+Received: Multicast message
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class MulticastClient {
+    public static void main(String[] args) throws Exception {
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress group = InetAddress.getByName("224.1.1.1");
+        String message = "Multicast message";
+        byte[] buffer = message.getBytes();
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, 10000);
+        socket.send(packet);
+        socket.close();
+    }
+}
+
+(Sent by the client, no console output)
+

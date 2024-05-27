@@ -1,0 +1,36 @@
+import java.util.Random;
+
+public class StopAndWaitARQ {
+    private int currentSeqNum = 0;
+
+    public void send(String data) {
+        System.out.println("Sending: " + data + " with Seq num: " + currentSeqNum);
+        if (new Random().nextInt(10) > 1) {  // Simulate 90% success rate
+            receiveAck(currentSeqNum);
+        } else {
+            System.out.println("Packet lost. Resending...");
+            send(data);
+        }
+    }
+
+    public void receiveAck(int ack) {
+        if (ack == currentSeqNum) {
+            System.out.println("ACK received for Seq num: " + ack);
+            currentSeqNum = 1 - currentSeqNum;
+        } else {
+            System.out.println("Invalid ACK: " + ack);
+        }
+    }
+
+    public static void main(String[] args) {
+        StopAndWaitARQ protocol = new StopAndWaitARQ();
+        protocol.send("Hello");
+        protocol.send("World");
+    }
+}
+
+Sending: Hello with Seq num: 0
+ACK received for Seq num: 0
+Sending: World with Seq num: 1
+ACK received for Seq num: 1
+

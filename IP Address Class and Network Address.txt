@@ -1,0 +1,31 @@
+public class IPAddressClassAndNetwork {
+    public static void main(String[] args) {
+        String ip = "192.168.1.1";
+        String[] parts = ip.split("\\.");
+        int firstOctet = Integer.parseInt(parts[0]);
+        String ipClass = "";
+        String networkAddress = "";
+
+        if (firstOctet >= 1 && firstOctet <= 126) {
+            ipClass = "A";
+            networkAddress = parts[0] + ".0.0.0";
+        } else if (firstOctet >= 128 && firstOctet <= 191) {
+            ipClass = "B";
+            networkAddress = parts[0] + "." + parts[1] + ".0.0";
+        } else if (firstOctet >= 192 && firstOctet <= 223) {
+            ipClass = "C";
+            networkAddress = parts[0] + "." + parts[1] + "." + parts[2] + ".0";
+        } else if (firstOctet >= 224 && firstOctet <= 239) {
+            ipClass = "D";
+        } else {
+            ipClass = "E";
+        }
+
+        System.out.println("IP Class: " + ipClass);
+        System.out.println("Network Address: " + networkAddress);
+    }
+}
+
+
+IP Class: C
+Network Address: 192.168.1.0

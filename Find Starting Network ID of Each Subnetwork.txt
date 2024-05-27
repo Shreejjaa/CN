@@ -1,0 +1,23 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+public class NetworkIDFinder {
+    public static void main(String[] args) throws UnknownHostException {
+        String ip = "192.168.1.0";
+        int subnetMask = 24;
+        InetAddress inet = InetAddress.getByName(ip);
+        byte[] addressBytes = inet.getAddress();
+        int mask = 0xFFFFFFFF << (32 - subnetMask);
+        int netID = 0;
+
+        for (int i = 0; i < addressBytes.length; i++) {
+            netID |= (addressBytes[i] & 0xFF) << (8 * (3 - i));
+        }
+
+        netID &= mask;
+
+        System.out.println("Network ID: " + ((netID >> 24) & 0xFF) + "." + ((netID >> 16) & 0xFF) + "." + ((netID >> 8) & 0xFF) + "." + (netID & 0xFF));
+    }
+}
+
+Network ID: 192.168.1.0
